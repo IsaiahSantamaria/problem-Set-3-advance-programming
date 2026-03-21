@@ -16,7 +16,7 @@ import javax.swing.SwingUtilities;
  * 
  */
 public class Concentration extends MouseAdapter implements Runnable {
-    private static final int SQUARE_SIZE = 200;
+    private static final int SQUARE_SIZE = 100;
     private static final int PADDING = 20;
 
     /**box color */
@@ -44,7 +44,7 @@ public class Concentration extends MouseAdapter implements Runnable {
         //setting up the basic gui setup, there will be a jFrame with a Jpanel inside it
         JFrame frame = new JFrame("Concentration");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setPreferredSize(new Dimension(SQUARE_SIZE * 6 + PADDING*7,SQUARE_SIZE * 6 + PADDING*7));
+        frame.setPreferredSize(new Dimension(SQUARE_SIZE * 6 + PADDING*8,SQUARE_SIZE * 6 + PADDING*9));
         frame.setResizable(true);
         frame.addMouseListener(this);
 
@@ -53,14 +53,19 @@ public class Concentration extends MouseAdapter implements Runnable {
             public void paintComponent(Graphics g){
                 super.paintComponent(g);
                 //drawing squares into the gui
-                int x = 1;
-                int y = 0;
+                int row = PADDING;
                 for(int i = 0; i < 6; i ++){
-                    g.setColor(Color.WHITE);
-                    g.fillRect(x * PADDING + SQUARE_SIZE * y, PADDING, SQUARE_SIZE, SQUARE_SIZE);
-                    x++;
-                    y++;
+                    int x = 1;
+                    int y = 0;
+                    for(int j = 0; j < 6; j ++){
+                        g.setColor(Color.WHITE);
+                        g.fillRect(x * PADDING + SQUARE_SIZE * y, row, SQUARE_SIZE, SQUARE_SIZE);
+                        x++;
+                        y++;
+                    }
+                    row = row + PADDING + SQUARE_SIZE;
                 }
+                
             }
         };
         //Add a mouse listener to the panel to respond to mouse events.
@@ -88,12 +93,15 @@ public class Concentration extends MouseAdapter implements Runnable {
         int x = e.getX();
         int y = e.getY();
         boolean isInBox = false; //this will check if mouse was clicked on the box
-        for(int i = 0; i < numSquares; i ++){
-            if(x >= ( i+ 1) * PADDING + i * SQUARE_SIZE && x <= (i + 1) * PADDING + (i + 1) * SQUARE_SIZE
-                && y >= PADDING && y <= PADDING + SQUARE_SIZE && numSquares >= (i+1)){
-                System.out.println("box is clicked");
-                isInBox = true;
+        for(int i = 0; i < 6; i ++){
+            for(int j = 0; j < 6; j ++){
+                    if(x >= ( i+ 1) * PADDING + i * SQUARE_SIZE && x <= (i + 1) * PADDING + (i + 1) * SQUARE_SIZE
+                    && (y >= ((j+1)*PADDING) && y <= ((j+1)*PADDING + SQUARE_SIZE) && numSquares >= (i+1))){
+                    System.out.println("box is clicked");
+                    isInBox = true;
+                }
             }
+            
         }
         if(!isInBox){
             System.out.println("box is not clicked");
