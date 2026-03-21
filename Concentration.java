@@ -1,15 +1,123 @@
+
+
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+
 /**
  * Concentration class for problem 2 in problem set 3
  * @author Isaiah Santamaria
  * @version 3/21/2026
  * 
  */
-public class Concentration {
+public class Concentration extends MouseAdapter implements Runnable {
+    private static final int SQUARE_SIZE = 200;
+    private static final int PADDING = 20;
+
+    /**box color */
+    private Color boxColor = Color.white;
+
+    /**main panel where boxes will be located */
+    private JPanel panel;
+
+    /**number of boxes that there will be in the application */
+    private int numSquares = 36;
+    
+    //matrix(back end of the program)
+    Matrix matrix;
+
+    public Concentration(){
+        matrix = new Matrix();
+        matrix.start();
+        
+
+    }
+    //JPanel with a paintComponent method using an anonymous class. 
+	// We override the paintComponent method to draw our squares.
+    @Override
+    public void run(){
+        //setting up the basic gui setup, there will be a jFrame with a Jpanel inside it
+        JFrame frame = new JFrame("Concentration");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setPreferredSize(new Dimension(SQUARE_SIZE * 6 + PADDING*7,SQUARE_SIZE * 6 + PADDING*7));
+        frame.setResizable(true);
+        frame.addMouseListener(this);
+
+        panel = new JPanel(){
+            @Override
+            public void paintComponent(Graphics g){
+                super.paintComponent(g);
+                //drawing squares into the gui
+                int x = 1;
+                int y = 0;
+                for(int i = 0; i < 6; i ++){
+                    g.setColor(Color.WHITE);
+                    g.fillRect(x * PADDING + SQUARE_SIZE * y, PADDING, SQUARE_SIZE, SQUARE_SIZE);
+                    x++;
+                    y++;
+                }
+            }
+        };
+        //Add a mouse listener to the panel to respond to mouse events.
+        panel.addMouseListener(this);
+
+        frame.add(panel);
+
+        //Display the window we've created.
+        frame.pack();
+        frame.setVisible(true);
+    
+        
+    }
+    
+        /**
+     * When the mouse button is pressed, change the color of the
+     * square(s) according to the (x, y) location of the
+     * mouse press in the JFrame.
+     * 
+     * @param e the mouse event
+     */
+    @Override
+    public void mousePressed(MouseEvent e) {
+        //Get the (x, y) location of the mouse button press.
+        int x = e.getX();
+        int y = e.getY();
+        boolean isInBox = false; //this will check if mouse was clicked on the box
+        for(int i = 0; i < numSquares; i ++){
+            if(x >= ( i+ 1) * PADDING + i * SQUARE_SIZE && x <= (i + 1) * PADDING + (i + 1) * SQUARE_SIZE
+                && y >= PADDING && y <= PADDING + SQUARE_SIZE && numSquares >= (i+1)){
+                System.out.println("box is clicked");
+                isInBox = true;
+            }
+        }
+        if(!isInBox){
+            System.out.println("box is not clicked");
+        }
+        panel.repaint();
+    }
+
+
+
+
+
+
+
+
+    
+
+
+
     public static void main(String []args){
         Matrix matrix = new Matrix();
         System.out.println(matrix + "\n");
         matrix.start();
         System.out.println(matrix);
+        SwingUtilities.invokeLater(new Concentration());
 
     }
     
