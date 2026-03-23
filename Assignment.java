@@ -8,14 +8,12 @@ import java.util.Map;
  * @version 3/14/2026
  */
 public abstract class Assignment implements Gradeable {
-    String name;
-    String feedback;
-    Map<Integer,GradePair> questionPoints;
+    private String name;
+    private String feedback;
+    private Map<Integer,GradePair> questionPoints;
 
     /**
-     * initialize name with parameter input,
-     * questinoPoints with new HashMap object
-     * and also feedback with an empty String
+     * Constructs an Assignment object with the specified name.
      * @param name 
      */
     public Assignment(String name){
@@ -27,13 +25,11 @@ public abstract class Assignment implements Gradeable {
     }
 
     /**
-     * adds questions to the assignment and stores its
-     * question number, points earned and the total points
-     * of the question
-     * @param questionNumber 
-     * @param pointsEarned
-     * @param totalPoints
-     * 
+     * Adds a question to the assignment with the specified question
+     * number, points earned, and total possible points.
+     * @param questionNumber - the number of the question 
+     * @param pointsEarned - the points earned for the question
+     * @param totalPoints - the total possible points for the question
      */
     public void addQuestion(int questionNumber, int pointsEarned, int totalPoints){
         //System.out.println("was able to go through loop");
@@ -44,9 +40,9 @@ public abstract class Assignment implements Gradeable {
     }
 
     /**
-     * calculates all earnedPoints out of total points of the assignment
-     * in a percentage value
-     * @return grade
+     * Calculates the grade for the assignment based 
+     * on the points earned and total possible points.
+     * @return grade - the calculated grade as an integer percentage
      */
     public double calculateGrade(){
         if(questionPoints == null) return 0.0;
@@ -64,16 +60,16 @@ public abstract class Assignment implements Gradeable {
     }
 
     /**
-     * replace this.feedback with string parameter feedback input
-     * @param changes the this.feedback value to feedback parameter
+     * Mechanism for allowing feedback for the assignment.
+     * @param feedback - a string containing feedback for the assignment
      */
     public void giveFeedback(String feedback){
         this.feedback = feedback;
 
     }
     /**
-     * returns the name
-     * @return name
+     * Returns the name of the assignment.
+     * @return the name of the assignment
      */
     public String getName(){
         return name;
@@ -81,8 +77,9 @@ public abstract class Assignment implements Gradeable {
     }
 
     /**
-     * Returns the output
-     * @return output
+     * Returns a string representation of the assignment, 
+     * including its name, calculated grade, and feedback.
+     * @return the calculated grade as an integer percentage
      */
     @Override
     public String toString(){

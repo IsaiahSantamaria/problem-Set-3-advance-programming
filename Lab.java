@@ -18,7 +18,7 @@ public class Lab extends Assignment{
     /**
      * intialize name with assignment constructor and also 
      * intilize checkPoints as a HasMap<Integer,Boolean>()
-     * @param name
+     * @param name - the name of the lab
      * 
      */
     public Lab(String name){
@@ -29,8 +29,8 @@ public class Lab extends Assignment{
     /**
      * adds checkpointNumber to the checkpoints varaible 
      * and indicates if it is complete or not
-     * @param checkpointNumber
-     * @param isComplete
+     * @param checkpointNumber - the number of the checkpoint
+     * @param isComplete - true if the checkpoint is complete, false otherwise
      */
     public void addCheckPoint(int checkpointNumber, boolean isComplete){
         checkPoints.put(checkpointNumber,isComplete);
@@ -40,7 +40,7 @@ public class Lab extends Assignment{
     /**
      * returns the output which decalres it's
      * lab assignment and its data values
-     * @return output
+     * @return a string representation of the Lab object
      */
     @Override
     public String toString(){
@@ -53,10 +53,5 @@ public class Lab extends Assignment{
         String output = "Lab " + super.toString() + strCheckPoints;
         return output;
     }
-
-
-
-
-
 
 }
