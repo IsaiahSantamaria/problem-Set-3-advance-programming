@@ -2,12 +2,13 @@
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
+
 
 /**
  * Concentration class for problem 2 in problem set 3
@@ -17,7 +18,7 @@ import javax.swing.SwingUtilities;
  */
 public class Concentration extends MouseAdapter implements Runnable {
     private static final int SQUARE_SIZE = 100;
-    private static final int PADDING = 20;
+    private static final int PADDING = 10;
 
     /**box color */
     private Color boxColor = Color.white;
@@ -44,7 +45,7 @@ public class Concentration extends MouseAdapter implements Runnable {
         //setting up the basic gui setup, there will be a jFrame with a Jpanel inside it
         JFrame frame = new JFrame("Concentration");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setPreferredSize(new Dimension(SQUARE_SIZE * 6 + PADDING*8,SQUARE_SIZE * 6 + PADDING*9));
+        frame.setPreferredSize(new Dimension(SQUARE_SIZE * 6 + PADDING*8,SQUARE_SIZE * 6 + PADDING*9 + 80));
         frame.setResizable(true);
         frame.addMouseListener(this);
 
@@ -52,35 +53,63 @@ public class Concentration extends MouseAdapter implements Runnable {
             @Override
             public void paintComponent(Graphics g){
                 super.paintComponent(g);
-                //drawing squares into the gui
+
+                FontMetrics fm = g.getFontMetrics();
                 int row = PADDING;
-                for(int i = 0; i < 6; i ++){
+
+                Font newFont = new Font("SansSerif", Font.BOLD, 16);
+                g.setFont(newFont);
+                g.drawString("Welcome to Concentration", (SQUARE_SIZE * 6 + PADDING*8)/2 - 80, 25);
+
+                for(int i = 0; i < 6; i++){
                     int x = 1;
                     int y = 0;
-                    for(int j = 0; j < 6; j ++){
+                    for(int j = 0; j < 6; j++){
+                        int boxX = x * PADDING + SQUARE_SIZE * y;
+                        int boxY = row + 30;
+
+                        // Draw the box
                         g.setColor(Color.WHITE);
-                        g.fillRect(x * PADDING + SQUARE_SIZE * y, row, SQUARE_SIZE, SQUARE_SIZE);
+                        g.fillRoundRect(boxX, boxY, SQUARE_SIZE, SQUARE_SIZE, 30, 30);
+
+                        // Draw centered text
+                        String text = String.valueOf(matrix.getVal(i, j)); // or any string
+                        int textX = boxX + (SQUARE_SIZE - fm.stringWidth(text)) / 2;
+                        int textY = boxY + (SQUARE_SIZE - fm.getHeight()) / 2 + fm.getAscent();
+
+                        newFont = new Font("SansSerif", Font.BOLD, 16);
+                        g.setFont(newFont);
+
+                        g.setColor(Color.BLACK);
+                        g.drawString(text, textX, textY);
+
                         x++;
                         y++;
                     }
                     row = row + PADDING + SQUARE_SIZE;
                 }
+
                 
+
+                
+
             }
-        };
+         };
+
+         //frame.setLayout(new FlowLayout());
+        JButton start = new JButton("Start");
+        frame.add(start);
         //Add a mouse listener to the panel to respond to mouse events.
         panel.addMouseListener(this);
-
         frame.add(panel);
 
         //Display the window we've created.
         frame.pack();
         frame.setVisible(true);
-    
         
     }
     
-        /**
+    /**
      * When the mouse button is pressed, change the color of the
      * square(s) according to the (x, y) location of the
      * mouse press in the JFrame.
@@ -89,36 +118,30 @@ public class Concentration extends MouseAdapter implements Runnable {
      */
     @Override
     public void mousePressed(MouseEvent e) {
-        //Get the (x, y) location of the mouse button press.
         int x = e.getX();
         int y = e.getY();
-        boolean isInBox = false; //this will check if mouse was clicked on the box
-        for(int i = 0; i < 6; i ++){
-            for(int j = 0; j < 6; j ++){
-                    if(x >= ( i+ 1) * PADDING + i * SQUARE_SIZE && x <= (i + 1) * PADDING + (i + 1) * SQUARE_SIZE
-                    && (y >= ((j+1)*PADDING) && y <= ((j+1)*PADDING + SQUARE_SIZE) && numSquares >= (i+1))){
+        boolean isInBox = false;
+
+        for (int i = 0; i < 6; i++) {
+            for (int row = 0; row < 6; row++) {
+                int rowTop = PADDING + row * (SQUARE_SIZE + PADDING) + 30;
+                int rowBottom = rowTop + SQUARE_SIZE + 30;
+                if (x >= (i + 1) * PADDING + i * SQUARE_SIZE
+                        && x <= (i + 1) * PADDING + (i + 1) * SQUARE_SIZE
+                        && y >= rowTop
+                        && y <= rowBottom
+                        && numSquares >= (i + 1)) {
                     System.out.println("box is clicked");
                     isInBox = true;
                 }
             }
-            
         }
-        if(!isInBox){
+
+        if (!isInBox) {
             System.out.println("box is not clicked");
         }
         panel.repaint();
     }
-
-
-
-
-
-
-
-
-    
-
-
 
     public static void main(String []args){
         Matrix matrix = new Matrix();
@@ -130,7 +153,6 @@ public class Concentration extends MouseAdapter implements Runnable {
     }
     
 }
-
 class Matrix {
     private Integer [][] intMatrix;
     private boolean [][] booleanMatrix;
@@ -240,7 +262,6 @@ class Matrix {
         }
 
     }
-
     /**
      * returns if values vals are repeated  
      * @param val
@@ -252,7 +273,6 @@ class Matrix {
         }
         return false;
     }
-
     /**
      * when gui is made, this method will check
      * if both values coordinate is pressed
@@ -273,8 +293,6 @@ class Matrix {
         }
         
     }
-
-
     /**
      * @return output of the Box class Matrixs data
      */
